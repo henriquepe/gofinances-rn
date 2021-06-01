@@ -20,8 +20,6 @@ export const Header = styled.View`
 
     background-color: ${({theme}) => theme.colors.primary};
 
-    justify-content: center;
-    align-items: center;
     
 `;
 
@@ -32,6 +30,7 @@ export const UserWrapper = styled.View`
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
+    margin-top: ${RFValue(58)}px;
 
 
 `;
@@ -85,11 +84,38 @@ export const Icon = styled(Feather)`
 `;
 
 
-export const HighLightCards = styled.ScrollView`
-
-    padding: 0 23px;
+export const HighLightCards = styled.ScrollView.attrs({
+    contentContainerStyle: { paddingHorizontal: 24 }
+})`
+    width: 100%;
     position: absolute;
-    top: ${RFPercentage(30)}px;
+    top: ${RFValue(130)}px; ;
 
 `;
 
+export const Transactions = styled.View`
+
+    flex: 1;
+    margin-top: ${RFValue(70)}px;
+
+
+
+
+
+`;
+
+export const TransactionCards = styled.ScrollView`
+
+
+    padding: 0 24px;
+
+
+
+`
+
+export const Title = styled.Text`
+    padding-left: 24px;
+    font-size: ${RFValue(18)}px;
+    font-family: ${({ theme }) => theme.fonts.regular};
+
+`;

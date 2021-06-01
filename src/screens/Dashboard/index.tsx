@@ -1,7 +1,7 @@
 import React from 'react';
-import HighlightCard from '../../componentes/HighlightCard';
+import HighlightCard from '../../components/HighlightCard';
 
-
+import TransactionCard from '../../components/TransactionCard';
 
 import {
   Container, 
@@ -13,7 +13,10 @@ import {
   UserGreeting,
   UserName,
   Icon,
-  HighLightCards
+  HighLightCards,
+  Transactions,
+  Title,
+  TransactionCards
 } from './styles';
 
 const Dashboard: React.FC = () => {
@@ -34,19 +37,36 @@ const Dashboard: React.FC = () => {
             <Icon name="power"/>
           </UserWrapper>
 
-          
-                    
+          <HighLightCards horizontal showsHorizontalScrollIndicator={false}>
+
+            <HighlightCard title="Entrada" type="up" amount="17.000" lastTransaction="Última entrada dia 13 de abril"/>
+
+            <HighlightCard title="Saída" type="down" amount="5.000" lastTransaction="Última entrada dia 15 de abril"/>
+
+            <HighlightCard title="Total" type="total" amount="12.000" lastTransaction="01 à 16 de abril"/>
+
+          </HighLightCards>
+                   
         </Header>
 
-        <HighLightCards horizontal showsHorizontalScrollIndicator={false}>
+        <Transactions>
 
-            <HighlightCard title="Entrada" icon="arrow-up-circle" amount="17.000" lastTransaction="Última entrada dia 13 de abril"/>
+            <Title>Resumo</Title>
 
-            <HighlightCard title="Saída" icon="arrow-down-circle" amount="5.000" lastTransaction="Última entrada dia 15 de abril"/>
+            <TransactionCards contentContainerStyle={{paddingBottom: 20}} showsVerticalScrollIndicator={false}>
 
-            <HighlightCard title="Entrada" icon="arrow-up-circle" amount="17.000" lastTransaction="Última entrada dia 13 de abril"/>
+            
 
-        </HighLightCards>
+              <TransactionCard title="Desenvolvimento Omint" amount="12.000" type="Vendas" date={new Date()}/>
+              <TransactionCard title="Outback" amount="2.000" type="Alimentacao" date={new Date()}/>
+              <TransactionCard amount="3.000" type="Casa" date={new Date()}/>
+              <TransactionCard title="Desenvolvimento Mobly" amount="12.000" type="Vendas" date={new Date()}/>
+
+            </TransactionCards>
+
+        </Transactions>
+
+            
 
         
     </Container>
