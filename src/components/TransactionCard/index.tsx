@@ -1,43 +1,63 @@
-import React from 'react';
+import React from "react";
 
-import moment from 'moment';
+import moment from "moment";
 
-import { 
-    Amount,
-    Container, 
-    Footer, 
-    Header, 
-    Icon, 
-    Title, 
-    DetailsWrapper,
-    DetailsTitle,
-    DetailsDate
-} from './styles';
+import {
+  Amount,
+  Container,
+  Footer,
+  Header,
+  Icon,
+  Title,
+  DetailsWrapper,
+  DetailsTitle,
+  DetailsDate,
+} from "./styles";
 
 interface TransactionCardProps {
-    title?: string;
-    type: "Carro" | "Casa" | "Alimentacao" | "Vendas";
-    amount: string;
-    date: Date;
+  title?: string;
+  type: "Carro" | "Casa" | "Alimentacao" | "Vendas";
+  amount: string;
+  date: Date;
+  transactionType: "Income" | "Outcome";
 }
 
-const TransactionCard: React.FC<TransactionCardProps> = ({title, type, amount, date}) => {
+const TransactionCard: React.FC<TransactionCardProps> = ({
+  title,
+  type,
+  amount,
+  date,
+  transactionType,
+}) => {
   return (
-      <Container type={type}>
-          <Header>
-            <Title type={type}>{title ? title : type}</Title>
-            <Amount type={type}>{type !== 'Vendas' && '- '}R$ {amount || '0'},00</Amount>
-          </Header>
+    <Container transactionType={transactionType} type={type}>
+      <Header>
+        <Title transactionType={transactionType} type={type}>
+          {title ? title : type}
+        </Title>
+        <Amount transactionType={transactionType} type={type}>
+          {transactionType !== "Income" && "- "}R$ {amount || "0"},00
+        </Amount>
+      </Header>
 
-          <Footer>
-            <Icon type={type} name={type === "Alimentacao" ? "coffee" : type === "Casa" ? "home" : "dollar-sign"}/>
-            <DetailsWrapper>
-              <DetailsTitle>{type}</DetailsTitle>
-              <DetailsDate>{moment(date).format('DD/MM/YYYY')}</DetailsDate>
-            </DetailsWrapper>
-          </Footer>
-      </Container>
-  )
-}
+      <Footer>
+        <Icon
+          type={type}
+          name={
+            type === "Alimentacao"
+              ? "coffee"
+              : type === "Casa"
+              ? "home"
+              : "dollar-sign"
+          }
+        />
+        <DetailsWrapper>
+          <DetailsTitle>{type}</DetailsTitle>
+          <DetailsDate>{moment(date).format("DD/MM/YYYY")}</DetailsDate>
+        </DetailsWrapper>
+      </Footer>
+    </Container>
+  );
+};
 
 export default TransactionCard;

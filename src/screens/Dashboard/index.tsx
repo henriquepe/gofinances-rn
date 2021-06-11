@@ -1,10 +1,10 @@
-import React from 'react';
-import HighlightCard from '../../components/HighlightCard';
-
-import TransactionCard from '../../components/TransactionCard';
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import React, { useEffect, useState } from "react";
+import HighlightCard from "../../components/HighlightCard";
+import TransactionCard from "../../components/TransactionCard";
 
 import {
-  Container, 
+  Container,
   Header,
   UserWrapper,
   UserInfo,
@@ -16,59 +16,101 @@ import {
   HighLightCards,
   Transactions,
   Title,
-  TransactionCards
-} from './styles';
+  TransactionCards,
+  LogoutButton,
+} from "./styles";
 
-const Dashboard: React.FC = () => {
+interface TransactionsProps {
+  name: string;
+  amount: string;
+  transactionType: "Income" | "Outcome";
+  category: "Carro" | "Casa" | "Alimentacao" | "Vendas";
+}
+
+export function Dashboard() {
+  const [transactions, setTransactions] = useState<TransactionsProps[]>([]);
+
+  const getTransactions = async () => {
+    const data = await AsyncStorage.getItem("@gofinances:transactions");
+
+    if (data !== null) {
+      let formatedData = JSON.parse(data);
+
+      console.log("formatedDAta", formatedData);
+
+      setTransactions(formatedData);
+    }
+  };
+
+  useEffect(() => {
+    getTransactions();
+  }, []);
+
   return (
     <Container>
-        <Header>
-          <UserWrapper>
-            <UserInfo>
+      <Header>
+        <UserWrapper>
+          <UserInfo>
+            <Photo
+              source={{
+                uri: "https://avatars.githubusercontent.com/u/62850277?v=4.png",
+              }}
+            />
 
-              <Photo source={{uri: 'https://avatars.githubusercontent.com/u/62850277?v=4.png'}}/>
+            <User>
+              <UserGreeting>Olá,</UserGreeting>
+              <UserName>Henrique</UserName>
+            </User>
+          </UserInfo>
 
-              <User>
-                <UserGreeting>Olá,</UserGreeting>
-                <UserName>Henrique</UserName>
-              </User>
+          <LogoutButton onPress={() => {}}>
+            <Icon name="power" />
+          </LogoutButton>
+        </UserWrapper>
 
-            </UserInfo>
-            <Icon name="power"/>
-          </UserWrapper>
+        <HighLightCards horizontal showsHorizontalScrollIndicator={false}>
+          <HighlightCard
+            title="Entrada"
+            type="up"
+            amount="17.000"
+            lastTransaction="Última entrada dia 13 de abril"
+          />
 
-          <HighLightCards horizontal showsHorizontalScrollIndicator={false}>
+          <HighlightCard
+            title="Saída"
+            type="down"
+            amount="5.000"
+            lastTransaction="Última entrada dia 15 de abril"
+          />
 
-            <HighlightCard title="Entrada" type="up" amount="17.000" lastTransaction="Última entrada dia 13 de abril"/>
+          <HighlightCard
+            title="Total"
+            type="total"
+            amount="12.000"
+            lastTransaction="01 à 16 de abril"
+          />
+        </HighLightCards>
+      </Header>
 
-            <HighlightCard title="Saída" type="down" amount="5.000" lastTransaction="Última entrada dia 15 de abril"/>
+      <Transactions>
+        <Title>Resumo</Title>
 
-            <HighlightCard title="Total" type="total" amount="12.000" lastTransaction="01 à 16 de abril"/>
-
-          </HighLightCards>
-                   
-        </Header>
-
-        <Transactions>
-
-            <Title>Resumo</Title>
-
-            <TransactionCards contentContainerStyle={{paddingBottom: 20}} showsVerticalScrollIndicator={false}>
-
-            
-
-              <TransactionCard title="Desenvolvimento Omint" amount="12.000" type="Vendas" date={new Date()}/>
-              <TransactionCard title="Outback" amount="2.000" type="Alimentacao" date={new Date()}/>
-              <TransactionCard amount="3.000" type="Casa" date={new Date()}/>
-              <TransactionCard title="Desenvolvimento Mobly" amount="12.000" type="Vendas" date={new Date()}/>
-
-            </TransactionCards>
-
-        </Transactions>
-
-            
-
-        
+        <TransactionCards
+          contentContainerStyle={{ paddingBottom: 20 }}
+          showsVerticalScrollIndicator={false}
+        >
+          {transactions.map((transaction, index) => (
+            <TransactionCard
+              key={index}
+              title={transaction.name}
+              amount={transaction.amount}
+              date={new Date()}
+              type={transaction.category}
+              transactionType={transaction.transactionType}
+            />
+          ))}
+        </TransactionCards>
+      </Transactions>
     </Container>
   );
 }
