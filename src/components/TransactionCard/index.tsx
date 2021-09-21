@@ -36,7 +36,8 @@ const TransactionCard: React.FC<TransactionCardProps> = ({
           {title ? title : type}
         </Title>
         <Amount transactionType={transactionType} type={type}>
-          {transactionType !== "Income" && "- "}R$ {amount || "0"},00
+          {transactionType !== "Income" && "- "}
+          {amount || "0"}
         </Amount>
       </Header>
 

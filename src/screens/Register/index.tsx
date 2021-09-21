@@ -3,7 +3,7 @@ import Input from "../../components/Input";
 import TransactionTypeButton from "../../components/TransactionTypeButton";
 import RNPickerSelect from "react-native-picker-select";
 
-import { Alert, Text } from "react-native";
+import { Alert, Keyboard, Text } from "react-native";
 
 import {
   Container,
@@ -21,6 +21,10 @@ import {
 import theme from "../../global/styles/theme";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
+import { categories } from "../../utils/categories";
+import { useRef } from "react";
+import { TouchableWithoutFeedback } from "react-native-gesture-handler";
+import { RFValue } from "react-native-responsive-fontsize";
 
 interface FormData {
   name: string;
@@ -29,13 +33,13 @@ interface FormData {
   category: string;
 }
 
-const Register = () => {
+export const Register: React.FC = () => {
   const [selectedValue, setSelectedValue] = useState("Categoria");
   const [itemsOpened, setItemsOpened] = useState(false);
   const [transactionType, setTransactionType] = useState("");
 
   const [name, setName] = useState("");
-  const [amount, setAmount] = useState(0);
+  const [amount, setAmount] = useState("");
 
   const navigation = useNavigation();
 
@@ -51,11 +55,20 @@ const Register = () => {
       return Alert.alert("Selecione o tipo da transação");
     }
 
+    if (!name) {
+      return Alert.alert("Selecione nome");
+    }
+
+    if (!amount) {
+      return Alert.alert("Selecione valor");
+    }
+
     const data = {
       name,
-      amount,
+      amount: Number(amount.replace(",", ".")),
       transactionType,
       category: selectedValue,
+      date: new Date(),
     };
 
     try {
@@ -73,9 +86,12 @@ const Register = () => {
 
       const dataAlreadyInAsyncStorage = await AsyncStorage.getItem(dataKey);
 
+      setSelectedValue("Categoria");
+      setName("");
+      setAmount("");
+      setTransactionType("");
       dataAlreadyInAsyncStorage && navigation.navigate("Listagem");
     } catch (err) {
-      console.log(err);
       Alert.alert("Não foi possível salvar a transação");
     }
   }
@@ -89,12 +105,15 @@ const Register = () => {
       <FormContainer>
         <Input
           placeholder="Nome"
+          value={name}
           onChangeText={setName}
           autoCapitalize="sentences"
+          clearTextOnFocus
         />
         <Input
           placeholder="Preço"
-          onChangeText={(text) => setAmount(Number(text))}
+          value={amount}
+          onChangeText={setAmount}
           keyboardType="numeric"
         />
 
@@ -110,18 +129,25 @@ const Register = () => {
             title="Outcome"
           />
         </ButtonsWrapper>
-
-        <CategoryPickerWrapper>
+        <>
           <RNPickerSelect
+            modalProps={{
+              focusable: true,
+            }}
+            style={{
+              viewContainer: {
+                width: RFValue(310),
+                padding: 16,
+                backgroundColor: theme.colors.shape,
+                borderRadius: 5,
+                justifyContent: "center",
+                marginLeft: 20,
+              },
+            }}
             onOpen={() => setItemsOpened(true)}
             onClose={() => setItemsOpened(false)}
             placeholder={{ label: "Categoria", value: "Categoria" }}
-            items={[
-              { label: "Casa", value: "Casa", key: "home" },
-              { label: "Carro", value: "Carro", key: "car" },
-              { label: "Vendas", value: "Vendas", key: "sells" },
-              { label: "Alimentação", value: "Alimentacao", key: "food" },
-            ]}
+            items={categories}
             onValueChange={setSelectedValue}
           >
             <PickerContent>
@@ -133,7 +159,7 @@ const Register = () => {
               />
             </PickerContent>
           </RNPickerSelect>
-        </CategoryPickerWrapper>
+        </>
 
         <SubmitButton onPress={handleRegister}>
           <SubmitButtonText>Enviar</SubmitButtonText>
@@ -142,5 +168,3 @@ const Register = () => {
     </Container>
   );
 };
-
-export default Register;

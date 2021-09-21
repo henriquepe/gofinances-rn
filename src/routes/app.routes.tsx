@@ -2,13 +2,12 @@ import React from "react";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useTheme } from "styled-components";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import Dashboard from "../screens/Dashboard";
-import Register from "../screens/Register";
+import { Dashboard } from "../screens/Dashboard";
+import { Register } from "../screens/Register";
 import { Platform } from "react-native";
+import { Resume } from "../screens/Resume";
 
 const { Navigator, Screen } = createBottomTabNavigator();
-
-// import { Container } from './styles';
 
 const AppRoutes: React.FC = () => {
   const theme = useTheme();
@@ -36,7 +35,6 @@ const AppRoutes: React.FC = () => {
               name="format-list-bulleted"
             />
           ),
-          unmountOnBlur: true,
         }}
         component={Dashboard}
       />
@@ -51,7 +49,7 @@ const AppRoutes: React.FC = () => {
       />
       <Screen
         name="Resumo"
-        component={Register}
+        component={Resume}
         options={{
           tabBarIcon: ({ size, color }) => (
             <MaterialIcons size={size} color={color} name="pie-chart" />
@@ -61,5 +59,4 @@ const AppRoutes: React.FC = () => {
     </Navigator>
   );
 };
-
 export default AppRoutes;

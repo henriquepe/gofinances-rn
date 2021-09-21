@@ -1,10 +1,6 @@
 import React from "react";
-import Dashboard from "./src/screens/Dashboard";
-import Register from "./src/screens/Register";
 
 import AppLoading from "expo-app-loading";
-
-import { NavigationContainer } from "@react-navigation/native";
 
 import { ThemeProvider } from "styled-components";
 import {
@@ -15,9 +11,14 @@ import {
 } from "@expo-google-fonts/poppins";
 
 import theme from "./src/global/styles/theme";
-import AppRoutes from "./src/routes/app.routes";
 
-export default function App() {
+import { StatusBar } from "react-native";
+
+import { AuthProvider } from "./src/hooks/auth";
+
+import Routes from "./src/routes";
+
+function App() {
   const [fontsLoaded] = useFonts({
     Poppins_400Regular,
     Poppins_500Medium,
@@ -30,9 +31,12 @@ export default function App() {
 
   return (
     <ThemeProvider theme={theme}>
-      <NavigationContainer>
-        <AppRoutes />
-      </NavigationContainer>
+      <StatusBar barStyle="light-content" />
+      <AuthProvider>
+        <Routes />
+      </AuthProvider>
     </ThemeProvider>
   );
 }
+
+export default App;
